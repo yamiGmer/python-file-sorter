@@ -1,0 +1,104 @@
+{
+    "categories": {
+        "Images": [
+            ".jpg",
+            ".jpeg",
+            ".png",
+            ".webp",
+            ".gif",
+            ".bmp",
+            ".svg"
+        ],
+
+        "Documents": [
+            ".pdf",
+            ".doc",
+            ".docx",
+            ".txt",
+            ".rtf",
+            ".odt"
+        ],
+
+        "Spreadsheets": [
+            ".xls",
+            ".xlsx",
+            ".csv",
+            ".ods"
+        ],
+
+        "Presentations": [
+            ".ppt",
+            ".pptx",
+            ".odp"
+        ],
+
+        "Videos": [
+            ".mp4",
+            ".mkv",
+            ".avi",
+            ".mov",
+            ".webm"
+        ],
+
+        "Audio": [
+            ".mp3",
+            ".wav",
+            ".flac",
+            ".aac",
+            ".ogg",
+            ".m4a"
+        ],
+
+        "Archives": [
+            ".zip",
+            ".rar",
+            ".7z",
+            ".tar",
+            ".gz",
+            ".bz2"
+        ],
+
+        "Code": [
+            ".py",
+            ".js",
+            ".ts",
+            ".html",
+            ".css",
+            ".json",
+            ".xml",
+            ".yaml",
+            ".yml",
+            ".sql",
+            ".java",
+            ".c",
+            ".cpp",
+            ".h"
+        ],
+
+        "Programs": [
+            ".exe",
+            ".msi",
+            ".jar",
+            ".bat",
+            ".cmd"
+        ],
+
+        "Disk Images": [
+            ".iso",
+            ".img"
+        ],
+
+        "Logs": [
+            ".log"
+        ],
+
+        "Configuration": [
+            ".ini",
+            ".cfg",
+            ".conf",
+            ".toml"
+        ],
+
+        "Others": []
+    }
+}
