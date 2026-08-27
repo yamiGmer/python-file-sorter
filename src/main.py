@@ -1,5 +1,5 @@
-from sorter import file_sorter, count_files
-from rules import load_categories
+from sorter import extension_sorter, count_files
+from .rules import load_categories
 from pathlib import Path
 
 categories = load_categories() # Initializes categories from json
@@ -34,7 +34,7 @@ decision = input("Do you wish to proceed(Y/N): ").lower()
 confirm = ["yes","y", "confirm"]
 deny = ["no", "n", 'cancel']
 if decision in confirm:
-    file_sorter(folder_path,categories)
+    extension_sorter(folder_path,categories)
 elif decision in deny:
     print("See you next time")
 else:
