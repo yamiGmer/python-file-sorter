@@ -132,8 +132,3 @@ def date_sorter(folder_path:Path, date_type):
         
         move_file(folder_path, file, date)
  
-
-date_sorter(TEST_FOLDER_PATH, "modified")  
-# date_container = count_date(TEST_FOLDER_PATH, "modified")
-# for date, count in date_container.items():
-#         print(date,":",count)
