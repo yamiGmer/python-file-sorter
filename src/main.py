@@ -3,10 +3,11 @@ import customtkinter as ctk
 from tkinter import filedialog
 
 from window import window_start, folder_list
-from window_widgets import toggle_frame, radio_selection
+from window_widgets import toggle_frame, radio_selection, confirm_action
 from sorter import extension_sorter, count_files, date_sorter
 from rules import load_categories
 from path_utils import clean_input
+
 
 
 
@@ -28,17 +29,21 @@ Folder path input
 path_var = ctk.StringVar()
 
 def path_changed(*args):
+    global list_opened
     path = path_var.get()
     print("Path changed:", path)
     
-    for widget in breakdown_frame.winfo_children():
-        widget.destroy()
-    
+    # disables sort button and hides frame and toggle button
     sort_button.configure(state="disabled")
-    breakdown_frame.destroy()
+    if list_opened: 
+        for widget in breakdown_frame.winfo_children():
+            widget.destroy()
+        breakdown_frame.grid_remove()
+        
+    toggle_button.pack_forget()
     
-    
-    
+
+    list_opened = False
     
     
 def browse_folder():
@@ -106,7 +111,7 @@ def handle_file_list():
         toggle_button.pack(side="left", padx=5)
         
         # Enable Sort Button
-        sort_button.configure(state="enabled")
+        sort_button.configure(state="normal")
         
 
     except ValueError as e:
@@ -131,6 +136,7 @@ Sort Button
 ==================================================================
 '''
 def handle_sort():
+    # answer = confirm_action()
     try:
         selected_sort = sort_selection.get()
         folder_path = Path(clean_input(entry.get()))
@@ -181,43 +187,5 @@ toggle_button = ctk.CTkButton(
     command=lambda: toggle_frame(breakdown_frame,toggle_button),
     
 )
-
-
-# file_count = count_files(folder_path, categories)
-# folder_list(breakdown_frame, file_count)
-
-
-
-
-
-
-# print("File Sorter")
-# folder_path = Path(clean_input(input("Enter file path: ")))
-
-
-# '''
-# Breakdown of file type in target folder
-
-# '''
-
-# print("File breakdown in folder")
-# for file, count in file_count.items():
-#     print(file,":",count)
-    
-# '''
-# Confirmation for sorting files
-
-# '''
-
-
-# decision = input("Do you wish to proceed(Y/N): ").lower()
-# confirm = ["yes","y", "confirm"]
-# deny = ["no", "n", 'cancel']
-# if decision in confirm:
-#     extension_sorter(folder_path,categories)
-# elif decision in deny:
-#     print("See you next time")
-# else:
-#     print("Invalid choice")
 
 app.mainloop()
