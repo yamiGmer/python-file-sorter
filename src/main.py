@@ -1,12 +1,13 @@
 from pathlib import Path
 import customtkinter as ctk
-from tkinter import filedialog
+from tkinter import filedialog, messagebox
+
 
 from window import window_start, folder_list
 from window_widgets import toggle_frame, radio_selection, confirm_action
 from sorter import extension_sorter, count_files, date_sorter
 from rules import load_categories
-from path_utils import clean_input
+from path_utils import clean_input, get_folder_path
 
 
 
@@ -28,20 +29,22 @@ Folder path input
 '''
 path_var = ctk.StringVar()
 
-def path_changed(*args):
+def reset_analysis():
     global list_opened
-    path = path_var.get()
-    print("Path changed:", path)
     
     # disables sort button and hides frame and toggle button
     sort_button.configure(state="disabled")
-    if list_opened: 
-        for widget in breakdown_frame.winfo_children():
-            widget.destroy()
-        breakdown_frame.grid_remove()
-        
     toggle_button.pack_forget()
-    list_opened = False
+    
+    # Removes breakdown frame
+    breakdown_frame.grid_remove()
+
+def path_changed(*args):
+    path = path_var.get()
+    print("Path changed:", path)
+    reset_analysis()
+    
+    
     
     
 def browse_folder():
@@ -81,20 +84,18 @@ sort_selection = radio_selection(settings_frame, sort_selections)
 ==================================================================
 Analyze Button
 ==================================================================
-'''
+'''    
+
 def handle_file_list():
     global list_opened
     try:
+        analyze_button.configure(state="disabled")
         # Get the current entry value
         folder_path = Path(clean_input(entry.get()))
 
         # Validate path
-        if not folder_path.exists():
-            raise ValueError("Folder does not exist")
+        folder_path = get_folder_path(folder_path)
 
-        if not folder_path.is_dir():
-            raise ValueError("Path is not a folder")
-        
         # Analyze folder
         file_count = count_files(folder_path,categories)
         
@@ -102,9 +103,8 @@ def handle_file_list():
         folder_list(breakdown_frame,file_count)
         
         # Show breakdown_frame
-        if not list_opened: breakdown_frame.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
-        list_opened = True
-
+        breakdown_frame.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
+        
         # Show Show/Hide button
         toggle_button.pack(side="left", padx=5)
         
@@ -113,7 +113,9 @@ def handle_file_list():
         
 
     except ValueError as e:
-        print("Error:", e)
+        messagebox.showerror("Error: ",str(e))
+    finally:
+        analyze_button.configure(state="normal")
 
 # Initializes button frame
 button_frame = ctk.CTkFrame(settings_frame,fg_color="transparent")
@@ -138,11 +140,8 @@ def handle_sort():
         selected_sort = sort_selection.get()
         folder_path = Path(clean_input(entry.get()))
 
-        if not folder_path.exists():
-            raise ValueError("Folder does not exist")
-
-        if not folder_path.is_dir():
-            raise ValueError("Path is not a folder")
+        # Validate path
+        folder_path = get_folder_path(folder_path)
         
         if confirm_action() != "Yes":
             return
@@ -157,11 +156,11 @@ def handle_sort():
         elif selected_sort == 3:
             date_sorter(folder_path, "created")
         else:
-            raise ValueError("Method is Unavailable")
+            messagebox.showerror("Method is unavailable")
              
 
     except ValueError as e:
-        print("Error:", e)
+        messagebox.showerror("Error: ",str(e))
 
     
     

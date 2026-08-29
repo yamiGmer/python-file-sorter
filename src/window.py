@@ -26,6 +26,8 @@ def window_start():
 
 
 def folder_list(frame, file_count):
+    for widget in frame.winfo_children():
+        widget.destroy()
     header = ctk.CTkLabel(
         frame,
         text="Folder Breakdown"
