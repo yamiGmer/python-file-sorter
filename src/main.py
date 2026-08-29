@@ -76,7 +76,12 @@ Radio button for choosing what type of sorting
 '''
 sort_label = ctk.CTkLabel(settings_frame, text="Sorting Method")
 sort_label.pack(pady=1, padx=10, anchor="w")
-sort_selections = ["File Extension(.pdf, .docx, .xlsx)", "Date Modified", "Date Created"]
+
+sort_selections = {
+    "extension": "File Extension (.pdf, .docx, .xlsx)",
+    "modified": "Date Modified",
+    "created": "Date Created",
+}
 sort_selection = radio_selection(settings_frame, sort_selections)
 
 
@@ -85,31 +90,32 @@ sort_selection = radio_selection(settings_frame, sort_selections)
 Analyze Button
 ==================================================================
 '''    
+def analyze_folder(folder_path):
+    # Analyze folder
+    file_count = count_files(folder_path,categories)
+    
+    # Display results
+    folder_list(breakdown_frame,file_count)
+    
+    # Show breakdown_frame
+    breakdown_frame.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
+    
+    # Show Show/Hide button
+    toggle_button.pack(side="left", padx=5)
+    
+    # Enable Sort Button
+    sort_button.configure(state="normal")
+    
 
 def handle_file_list():
     global list_opened
     try:
         analyze_button.configure(state="disabled")
-        # Get the current entry value
-        folder_path = Path(clean_input(entry.get()))
 
         # Validate path
-        folder_path = get_folder_path(folder_path)
+        folder_path = get_folder_path(entry)
 
-        # Analyze folder
-        file_count = count_files(folder_path,categories)
-        
-        # Display results
-        folder_list(breakdown_frame,file_count)
-        
-        # Show breakdown_frame
-        breakdown_frame.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
-        
-        # Show Show/Hide button
-        toggle_button.pack(side="left", padx=5)
-        
-        # Enable Sort Button
-        sort_button.configure(state="normal")
+        analyze_folder(folder_path)
         
 
     except ValueError as e:
@@ -137,26 +143,30 @@ Sort Button
 '''
 def handle_sort():
     try:
-        selected_sort = sort_selection.get()
-        folder_path = Path(clean_input(entry.get()))
-
-        # Validate path
-        folder_path = get_folder_path(folder_path)
-        
         if confirm_action() != "Yes":
             return
+        
+        selected_sort = sort_selection.get()
+
+        # Validate path
+        folder_path = get_folder_path(entry)
+        
         
         print("Sort selected:", selected_sort)
         print("Folder:", folder_path)
         
-        if selected_sort == 1:
+        if selected_sort == "extension":
             extension_sorter(folder_path,categories)
-        elif selected_sort == 2:
-            date_sorter(folder_path, "modified") 
-        elif selected_sort == 3:
+        elif selected_sort == "modified":
+            date_sorter(folder_path, "modified")
+        elif selected_sort == "created":
             date_sorter(folder_path, "created")
         else:
             messagebox.showerror("Method is unavailable")
+        
+        # Refreshes folder breakdown
+        file_count = count_files(folder_path, categories)
+        folder_list(breakdown_frame, file_count)
              
 
     except ValueError as e:

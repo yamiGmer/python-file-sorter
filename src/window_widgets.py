@@ -11,9 +11,9 @@ def toggle_frame(frame, button):
 
 
 def radio_selection(frame, selections):
-    radio_var = ctk.IntVar(value=1)
+    radio_var = ctk.StringVar(value="extension")
 
-    for value, selection in enumerate(selections, start=1):
+    for value, selection in selections.items():
         radiobutton = ctk.CTkRadioButton(
             frame,
             text=selection,
