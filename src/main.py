@@ -41,8 +41,6 @@ def path_changed(*args):
         breakdown_frame.grid_remove()
         
     toggle_button.pack_forget()
-    
-
     list_opened = False
     
     
@@ -136,7 +134,6 @@ Sort Button
 ==================================================================
 '''
 def handle_sort():
-    # answer = confirm_action()
     try:
         selected_sort = sort_selection.get()
         folder_path = Path(clean_input(entry.get()))
@@ -146,7 +143,10 @@ def handle_sort():
 
         if not folder_path.is_dir():
             raise ValueError("Path is not a folder")
-
+        
+        if confirm_action() != "Yes":
+            return
+        
         print("Sort selected:", selected_sort)
         print("Folder:", folder_path)
         

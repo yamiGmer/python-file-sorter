@@ -1,4 +1,6 @@
 import customtkinter as ctk
+from CTkMessagebox import CTkMessagebox
+
 def toggle_frame(frame, button):
     if frame.winfo_ismapped():
         frame.grid_forget()
@@ -21,3 +23,14 @@ def radio_selection(frame, selections):
         radiobutton.pack(anchor="w", padx=10, pady=5)
 
     return radio_var
+
+def confirm_action():
+    answer = CTkMessagebox(
+        title="Confirm",
+        message="Are you sure you want to sort the folder?",
+        icon="warning",
+        option_1="Yes",
+        option_2="No"
+    ).get()
+    
+    return answer
