@@ -17,43 +17,61 @@ Initialize categories and ui app and frame
 '''
 list_opened = False
 categories = load_categories() # Initializes categories from json
-app, frame1, frame2 = window_start()
-frame1.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+app, settings_frame, breakdown_frame = window_start()
+settings_frame.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
 
 '''
 ==================================================================
 Folder path input
 ==================================================================
 '''
+path_var = ctk.StringVar()
+
+def path_changed(*args):
+    path = path_var.get()
+    print("Path changed:", path)
+    
+    for widget in breakdown_frame.winfo_children():
+        widget.destroy()
+    
+    sort_button.configure(state="disabled")
+    breakdown_frame.destroy()
+    
+    
+    
+    
+    
 def browse_folder():
     path = filedialog.askdirectory()
     
     if path:
-        path = Path(path)
-        entry.delete(0,"end")
-        entry.insert(0,str(path))
+        path_var.set(str(Path(path)))
     
-folder_label = ctk.CTkLabel(frame1, text="Folder:")
-folder_label.pack(pady=(10, 2), padx=10, anchor="w")
+folder_label = ctk.CTkLabel(settings_frame, text="Folder:")
+folder_label.pack(pady=(10, 2), padx=10, anchor="w") 
 
-browse_frame = ctk.CTkFrame(frame1, fg_color='transparent')
+browse_frame = ctk.CTkFrame(settings_frame, fg_color='transparent')
 browse_frame.pack(pady=5, padx=10, fill="x")
 
-entry = ctk.CTkEntry(browse_frame, placeholder_text="Enter File Path...")
+entry = ctk.CTkEntry(browse_frame, placeholder_text="Enter File Path...", textvariable=path_var)
 entry.pack(side="left", fill="x", expand=True)
 
 browse_btn = ctk.CTkButton(browse_frame, text="Browse", width=80, command=browse_folder)
 browse_btn.pack(side="left", padx=(5,0))
+
+path_var.trace_add("write", path_changed)
+
+
 
 '''
 ==================================================================
 Radio button for choosing what type of sorting
 ==================================================================
 '''
-sort_label = ctk.CTkLabel(frame1, text="Sorting Method")
+sort_label = ctk.CTkLabel(settings_frame, text="Sorting Method")
 sort_label.pack(pady=1, padx=10, anchor="w")
 sort_selections = ["File Extension(.pdf, .docx, .xlsx)", "Date Modified", "Date Created"]
-sort_selection = radio_selection(frame1, sort_selections)
+sort_selection = radio_selection(settings_frame, sort_selections)
 
 
 '''
@@ -78,33 +96,33 @@ def handle_file_list():
         file_count = count_files(folder_path,categories)
         
         # Display results
-        folder_list(frame2,file_count)
+        folder_list(breakdown_frame,file_count)
         
-        # Show frame2
-        if not list_opened: frame2.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
+        # Show breakdown_frame
+        if not list_opened: breakdown_frame.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
         list_opened = True
 
         # Show Show/Hide button
-        button2.pack(side="left", padx=5)
+        toggle_button.pack(side="left", padx=5)
         
         # Enable Sort Button
-        button3.configure(state="enabled")
+        sort_button.configure(state="enabled")
         
 
     except ValueError as e:
         print("Error:", e)
 
 # Initializes button frame
-button_frame = ctk.CTkFrame(frame1,fg_color="transparent")
+button_frame = ctk.CTkFrame(settings_frame,fg_color="transparent")
 button_frame.pack(pady=20)
 
-button = ctk.CTkButton(
+analyze_button = ctk.CTkButton(
     button_frame,
     text="Analyze Folder",
     command=handle_file_list,
     
 )
-button.pack(side="left", padx=5)
+analyze_button.pack(side="left", padx=5)
 
 
 '''
@@ -143,13 +161,13 @@ def handle_sort():
     
 
 
-button3 = ctk.CTkButton(
+sort_button = ctk.CTkButton(
     button_frame,
     text="Sort Files",
     command=handle_sort,
 )
-button3.configure(state="disabled")
-button3.pack(side="left", padx=5)
+sort_button.configure(state="disabled")
+sort_button.pack(side="left", padx=5)
 
 '''
 ==================================================================
@@ -157,16 +175,16 @@ Show/Hide Button
 ==================================================================
 '''
 
-button2 = ctk.CTkButton(
+toggle_button = ctk.CTkButton(
     button_frame,
     text="Hide",
-    command=lambda: toggle_frame(frame2,button2),
+    command=lambda: toggle_frame(breakdown_frame,toggle_button),
     
 )
 
 
 # file_count = count_files(folder_path, categories)
-# folder_list(frame2, file_count)
+# folder_list(breakdown_frame, file_count)
 
 
 
