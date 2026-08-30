@@ -1,4 +1,9 @@
-.venv
+# Virtual environment
+.venv/
+
+# Environment variables
 .env
 
-./src/__pycache__/*
+# Python cache
+__pycache__/
+*.py[cod]
