@@ -7,7 +7,7 @@ from window import window_start, folder_list
 from window_widgets import toggle_frame, radio_selection, confirm_action
 from sorter import extension_sorter, count_files, date_sorter
 from rules import load_categories
-from path_utils import clean_input, get_folder_path
+from path_utils import get_folder_path
 
 
 
@@ -17,7 +17,6 @@ from path_utils import clean_input, get_folder_path
 Initialize categories and ui app and frame
 ==================================================================
 '''
-list_opened = False
 categories = load_categories() # Initializes categories from json
 app, settings_frame, breakdown_frame = window_start()
 settings_frame.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
@@ -30,7 +29,6 @@ Folder path input
 path_var = ctk.StringVar()
 
 def reset_analysis():
-    global list_opened
     
     # disables sort button and hides frame and toggle button
     sort_button.configure(state="disabled")
@@ -49,9 +47,9 @@ def path_changed(*args):
     
 def browse_folder():
     path = filedialog.askdirectory()
-    
     if path:
         path_var.set(str(Path(path)))
+        
     
 folder_label = ctk.CTkLabel(settings_frame, text="Folder:")
 folder_label.pack(pady=(10, 2), padx=10, anchor="w") 
@@ -108,7 +106,6 @@ def analyze_folder(folder_path):
     
 
 def handle_file_list():
-    global list_opened
     try:
         analyze_button.configure(state="disabled")
 
@@ -173,8 +170,6 @@ def handle_sort():
         messagebox.showerror("Error: ",str(e))
 
     
-    
-
 
 sort_button = ctk.CTkButton(
     button_frame,
